@@ -20,6 +20,7 @@ class WorkoutProvider with ChangeNotifier {
   Workout? get currentWorkout => _currentWorkout;
   bool get isLoading => _isLoading;
   bool get isWorkoutFinished => _currentWorkout?.isCompleted ?? false;
+  bool get hasActiveWorkout => _currentWorkout != null && !_currentWorkout!.isCompleted;
 
   Exercise? get currentExercise {
     if (_currentExerciseIndex < _workoutSequence.length) {
