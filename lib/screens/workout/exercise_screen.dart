@@ -1,13 +1,75 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:vibration/vibration.dart';
 import '../../providers/workout_provider.dart';
 import '../../widgets/workout/exercise_gif_player.dart';
 import '../../widgets/workout/rep_selector.dart';
 import '../../widgets/workout/navigation_controls.dart';
 import '../../widgets/workout/level_selector_dialog.dart';
 
-class ExerciseScreen extends StatelessWidget {
+class ExerciseScreen extends StatefulWidget {
   const ExerciseScreen({Key? key}) : super(key: key);
+
+  @override
+  State<ExerciseScreen> createState() => _ExerciseScreenState();
+}
+
+class _ExerciseScreenState extends State<ExerciseScreen> {
+  Timer? _timer;
+  int _remainingSeconds = 0;
+  String? _currentExerciseId;
+  bool _hasVibrated = false;
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  void _startTimer(int duration) {
+    _remainingSeconds = duration;
+    _hasVibrated = false;
+
+    _timer?.cancel();
+
+    // Only start timer if duration > 0
+    if (duration > 0) {
+      _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+        if (mounted) {
+          setState(() {
+            if (_remainingSeconds > 0) {
+              _remainingSeconds--;
+            } else {
+              // Vibrate when timer reaches 0
+              if (!_hasVibrated) {
+                _triggerVibration();
+                _hasVibrated = true;
+              }
+              timer.cancel();
+            }
+          });
+        }
+      });
+    } else {
+      // No timer for warmup exercises
+      _remainingSeconds = 0;
+    }
+  }
+
+  Future<void> _triggerVibration() async {
+    // Check if device has vibration capability
+    bool? hasVibrator = await Vibration.hasVibrator();
+    if (hasVibrator == true) {
+      Vibration.vibrate(duration: 500); // Vibrate for 500ms
+    }
+  }
+
+  String _formatTime(int seconds) {
+    final minutes = seconds ~/ 60;
+    final secs = seconds % 60;
+    return '${minutes.toString().padLeft(2, '0')}:${secs.toString().padLeft(2, '0')}';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -15,6 +77,7 @@ class ExerciseScreen extends StatelessWidget {
       builder: (context, workoutProvider, child) {
         final currentExercise = workoutProvider.currentExercise;
         final currentSet = workoutProvider.currentExerciseSet;
+        final restDuration = workoutProvider.currentRestDuration;
 
         if (currentExercise == null || currentSet == null) {
           return const Scaffold(
@@ -22,6 +85,23 @@ class ExerciseScreen extends StatelessWidget {
               child: Text('No exercise loaded'),
             ),
           );
+        }
+
+        // Create a unique key for this exercise (exercise ID + set number if available)
+        final setNumber = workoutProvider.currentSetNumber;
+        final exerciseKey = setNumber != null
+            ? '${currentExercise.id}_set_$setNumber'
+            : currentExercise.id;
+
+        // Start timer when we move to a new exercise
+        if (_currentExerciseId != exerciseKey) {
+          _currentExerciseId = exerciseKey;
+          // Set the remaining seconds immediately to avoid showing 0:00
+          _remainingSeconds = restDuration;
+          // Then start the timer
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            _startTimer(restDuration);
+          });
         }
 
         return Scaffold(
@@ -40,6 +120,21 @@ class ExerciseScreen extends StatelessWidget {
           body: SafeArea(
             child: Column(
               children: [
+                // Timer display (only show if rest duration > 0)
+                if (restDuration > 0)
+                  Container(
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    child: Text(
+                      _formatTime(_remainingSeconds),
+                      style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: _remainingSeconds == 0
+                                ? Colors.red
+                                : Theme.of(context).primaryColor,
+                          ),
+                    ),
+                  ),
+
                 // Exercise information
                 Padding(
                   padding: const EdgeInsets.all(16.0),

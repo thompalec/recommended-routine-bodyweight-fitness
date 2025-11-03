@@ -20,6 +20,9 @@ dependencies:
   # Date Formatting
   intl: ^0.18.1
 
+  # Vibration
+  vibration: ^2.0.0
+
   # UI Components
   cupertino_icons: ^1.0.6
 

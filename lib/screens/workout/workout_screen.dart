@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/workout_provider.dart';
 import 'exercise_screen.dart';
-import 'rest_timer_screen.dart';
 
 class WorkoutScreen extends StatefulWidget {
   const WorkoutScreen({Key? key}) : super(key: key);
@@ -30,15 +29,6 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
             body: Center(
               child: CircularProgressIndicator(),
             ),
-          );
-        }
-
-        // Show rest timer or exercise based on current state
-        if (workoutProvider.isResting) {
-          return RestTimerScreen(
-            duration: workoutProvider.restDuration,
-            onComplete: () => workoutProvider.completeRest(),
-            onSkip: () => workoutProvider.skipRest(),
           );
         }
 

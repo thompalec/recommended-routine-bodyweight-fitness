@@ -15,14 +15,10 @@ class WorkoutProvider with ChangeNotifier {
   List<Map<String, dynamic>> _workoutSequence = [];
   int _currentExerciseIndex = 0;
   bool _isLoading = false;
-  bool _isResting = false;
-  int _restDuration = 0;
 
   // Getters
   Workout? get currentWorkout => _currentWorkout;
   bool get isLoading => _isLoading;
-  bool get isResting => _isResting;
-  int get restDuration => _restDuration;
 
   Exercise? get currentExercise {
     if (_currentExerciseIndex < _workoutSequence.length) {
@@ -44,6 +40,13 @@ class WorkoutProvider with ChangeNotifier {
       return _workoutSequence[_currentExerciseIndex]['setNumber'];
     }
     return null;
+  }
+
+  int get currentRestDuration {
+    if (_currentExerciseIndex < _workoutSequence.length) {
+      return _workoutSequence[_currentExerciseIndex]['restAfter'] as int? ?? 0;
+    }
+    return 0;
   }
 
   // Start a new workout
@@ -153,38 +156,11 @@ class WorkoutProvider with ChangeNotifier {
       if (_currentExerciseIndex == _workoutSequence.length - 1) {
         _finishWorkout();
       } else {
-        // Move to rest period if needed
-        final restAfter = _workoutSequence[_currentExerciseIndex]['restAfter'] as int? ?? 0;
-        if (restAfter > 0) {
-          _startRest(restAfter);
-        } else {
-          _moveToNextExercise();
-        }
+        _moveToNextExercise();
       }
 
       notifyListeners();
     }
-  }
-
-  // Start rest period
-  void _startRest(int duration) {
-    _isResting = true;
-    _restDuration = duration;
-    notifyListeners();
-  }
-
-  // Complete rest period
-  void completeRest() {
-    _isResting = false;
-    _restDuration = 0;
-    _moveToNextExercise();
-  }
-
-  // Skip rest period
-  void skipRest() {
-    _isResting = false;
-    _restDuration = 0;
-    _moveToNextExercise();
   }
 
   // Move to next exercise
