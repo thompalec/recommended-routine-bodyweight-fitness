@@ -24,6 +24,13 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
   Widget build(BuildContext context) {
     return Consumer<WorkoutProvider>(
       builder: (context, workoutProvider, child) {
+        // Check if workout is finished and navigate back to home
+        if (workoutProvider.isWorkoutFinished) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            Navigator.of(context).popUntil((route) => route.isFirst);
+          });
+        }
+
         if (workoutProvider.isLoading) {
           return const Scaffold(
             body: Center(
