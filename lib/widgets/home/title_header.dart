@@ -32,28 +32,11 @@ class TitleHeader extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 16),
-        Column(
-          children: [
-            Text(
-              'BODYWEIGHT FITNESS',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: 1.5,
-                  ),
-              textAlign: TextAlign.center,
-            ),
-            Text(
-              'RECOMMENDED ROUTINE',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: 1,
-                  ),
-              textAlign: TextAlign.center,
-            ),
-          ],
+        const SizedBox(height: 8),
+        Text(
+          'BODYWEIGHT FITNESS RECOMMENDED ROUTINE',
+          style: Theme.of(context).textTheme.titleMedium,
+          textAlign: TextAlign.center,
         ),
       ],
     );
