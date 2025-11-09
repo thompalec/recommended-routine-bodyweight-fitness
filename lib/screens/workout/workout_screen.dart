@@ -14,12 +14,9 @@ class _WorkoutScreenState extends State<WorkoutScreen> {
   @override
   void initState() {
     super.initState();
-    // Initialize workout when screen loads (only if no active workout exists)
+    // Initialize workout when screen loads
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final workoutProvider = Provider.of<WorkoutProvider>(context, listen: false);
-      if (!workoutProvider.hasActiveWorkout) {
-        workoutProvider.startWorkout();
-      }
+      Provider.of<WorkoutProvider>(context, listen: false).startWorkout();
     });
   }
 

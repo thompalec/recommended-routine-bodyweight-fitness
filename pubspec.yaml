@@ -23,9 +23,6 @@ dependencies:
   # Vibration
   vibration: ^2.0.0
 
-  # Fonts
-  google_fonts: ^6.1.0
-
   # UI Components
   cupertino_icons: ^1.0.6
 
