@@ -4,6 +4,7 @@ class ExerciseSet {
   final int progressionLevel;
   final String progressionName;
   final int value; // reps or seconds
+  final double weight; // weight in lbs/kg, 0 if not applicable
   final bool isCompleted;
   final DateTime? completedAt;
 
@@ -13,6 +14,7 @@ class ExerciseSet {
     required this.progressionLevel,
     required this.progressionName,
     required this.value,
+    this.weight = 0,
     this.isCompleted = false,
     this.completedAt,
   });
@@ -23,6 +25,7 @@ class ExerciseSet {
     int? progressionLevel,
     String? progressionName,
     int? value,
+    double? weight,
     bool? isCompleted,
     DateTime? completedAt,
   }) {
@@ -32,6 +35,7 @@ class ExerciseSet {
       progressionLevel: progressionLevel ?? this.progressionLevel,
       progressionName: progressionName ?? this.progressionName,
       value: value ?? this.value,
+      weight: weight ?? this.weight,
       isCompleted: isCompleted ?? this.isCompleted,
       completedAt: completedAt ?? this.completedAt,
     );
@@ -44,6 +48,7 @@ class ExerciseSet {
       'progressionLevel': progressionLevel,
       'progressionName': progressionName,
       'value': value,
+      'weight': weight,
       'isCompleted': isCompleted,
       'completedAt': completedAt?.toIso8601String(),
     };
@@ -56,6 +61,7 @@ class ExerciseSet {
       progressionLevel: json['progressionLevel'],
       progressionName: json['progressionName'],
       value: json['value'],
+      weight: (json['weight'] as num?)?.toDouble() ?? 0,
       isCompleted: json['isCompleted'] ?? false,
       completedAt: json['completedAt'] != null
           ? DateTime.parse(json['completedAt'])

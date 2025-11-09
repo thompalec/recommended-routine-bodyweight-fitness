@@ -5,8 +5,10 @@ import 'package:vibration/vibration.dart';
 import '../../providers/workout_provider.dart';
 import '../../widgets/workout/exercise_gif_player.dart';
 import '../../widgets/workout/rep_selector.dart';
+import '../../widgets/workout/weight_selector.dart';
 import '../../widgets/workout/navigation_controls.dart';
 import '../../widgets/workout/level_selector_dialog.dart';
+import '../../data/exercise_progressions.dart';
 
 class ExerciseScreen extends StatefulWidget {
   const ExerciseScreen({Key? key}) : super(key: key);
@@ -181,6 +183,29 @@ class _ExerciseScreenState extends State<ExerciseScreen> {
                 ),
 
                 const SizedBox(height: 16),
+
+                // Weight selector (only show if current progression uses weight)
+                Builder(
+                  builder: (context) {
+                    final progression = ExerciseProgressions.getProgressionForExercise(currentExercise.id);
+                    final progressionLevel = progression?.getLevelByIndex(currentSet.progressionLevel);
+
+                    if (progressionLevel?.usesWeight == true) {
+                      return Column(
+                        children: [
+                          WeightSelector(
+                            currentWeight: currentSet.weight,
+                            onWeightChanged: (weight) {
+                              workoutProvider.updateCurrentExerciseWeight(weight);
+                            },
+                          ),
+                          const SizedBox(height: 16),
+                        ],
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  },
+                ),
 
                 // Navigation controls
                 NavigationControls(

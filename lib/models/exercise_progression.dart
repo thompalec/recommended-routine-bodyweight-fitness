@@ -36,12 +36,14 @@ class ProgressionLevel {
   final String name;
   final String description;
   final String gifPath;
+  final bool usesWeight;
 
   ProgressionLevel({
     required this.level,
     required this.name,
     required this.description,
     required this.gifPath,
+    this.usesWeight = false,
   });
 
   Map<String, dynamic> toJson() {
@@ -50,6 +52,7 @@ class ProgressionLevel {
       'name': name,
       'description': description,
       'gifPath': gifPath,
+      'usesWeight': usesWeight,
     };
   }
 
@@ -59,6 +62,7 @@ class ProgressionLevel {
       name: json['name'],
       description: json['description'],
       gifPath: json['gifPath'],
+      usesWeight: json['usesWeight'] ?? false,
     );
   }
 }

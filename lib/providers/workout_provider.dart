@@ -118,6 +118,19 @@ class WorkoutProvider with ChangeNotifier {
     }
   }
 
+  // Update the current exercise weight
+  void updateCurrentExerciseWeight(double weight) {
+    if (_currentWorkout != null &&
+        _currentExerciseIndex < _currentWorkout!.exercises.length) {
+      final updatedSet =
+          _currentWorkout!.exercises[_currentExerciseIndex].copyWith(
+        weight: weight,
+      );
+      _currentWorkout!.exercises[_currentExerciseIndex] = updatedSet;
+      notifyListeners();
+    }
+  }
+
   // Update progression level for current exercise
   void updateProgressionLevel(int level) {
     if (_currentWorkout != null &&
