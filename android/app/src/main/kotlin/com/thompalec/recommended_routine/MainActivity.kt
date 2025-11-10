@@ -1,4 +1,4 @@
-package com.example.recommended_routine_app
+package com.thompalec.recommended_routine
 
 import io.flutter.embedding.android.FlutterActivity
 
