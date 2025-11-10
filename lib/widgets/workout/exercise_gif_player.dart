@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import '../../data/exercise_progressions.dart';
 
+/// Widget that displays exercise media (GIF or static image).
+/// Automatically detects file type based on extension:
+/// - .gif: Displays as animated GIF
+/// - .png, .jpg, .jpeg, .webp: Displays as static image
 class ExerciseGifPlayer extends StatelessWidget {
   final String gifPath;
   final String exerciseId;
@@ -13,9 +17,9 @@ class ExerciseGifPlayer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Get the actual gif path from progressions if available
+    // Get the actual media path from progressions if available
     final progression = ExerciseProgressions.getProgressionForExercise(exerciseId);
-    String actualGifPath = gifPath;
+    String actualMediaPath = gifPath;
 
     // Try to find matching progression level
     if (progression != null) {
@@ -23,7 +27,7 @@ class ExerciseGifPlayer extends StatelessWidget {
         (level) => level.name == gifPath,
         orElse: () => progression.levels.first,
       );
-      actualGifPath = matchingLevel.gifPath;
+      actualMediaPath = matchingLevel.gifPath;
     }
 
     return Container(
@@ -36,7 +40,7 @@ class ExerciseGifPlayer extends StatelessWidget {
         child: ClipRRect(
           borderRadius: BorderRadius.circular(12),
           child: Image.asset(
-            actualGifPath,
+            actualMediaPath,
             fit: BoxFit.contain,
             errorBuilder: (context, error, stackTrace) {
               return Column(
@@ -49,7 +53,7 @@ class ExerciseGifPlayer extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'Exercise GIF',
+                    'Exercise Media',
                     style: TextStyle(
                       color: Colors.grey[600],
                       fontSize: 16,
@@ -59,7 +63,7 @@ class ExerciseGifPlayer extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 32),
                     child: Text(
-                      'GIF not found: $actualGifPath',
+                      'Media not found: $actualMediaPath',
                       style: TextStyle(
                         color: Colors.grey[500],
                         fontSize: 12,

@@ -8,7 +8,7 @@ class WorkoutData {
       name: "Yuri's Shoulder Band Warmup",
       category: 'warmup',
       progressionLevels: ['Standard'],
-      gifPath: 'assets/gifs/warmup/shoulder_band_warmup.gif',
+      gifPath: 'assets/gifs/warmup/warmup_shoulder_band_0.gif',
       comments: 'Less good: Stick dislocates, can also be done with a tee-shirt',
       isReps: true,
       defaultValue: 5,
